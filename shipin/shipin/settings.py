@@ -23,7 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_-c4#=5_rx^*wp3n1bmh=yo&%0=-8onfd+(^0^mh%!vmpz-%e!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if 'DYNO' not in os.environ:
+    DEBUG = True
+else:   # Running on Heroku
+    DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -76,17 +79,23 @@ WSGI_APPLICATION = 'shipin.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'shipinDB',
-        'USER': 'shipin',
-        'PASSWORD':'shipin',
-        'HOST':'localhost',
-        'PORT':'',
+if DEBUG==True: # Running on the development environment
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'shipinDB',
+            'USER': 'shipin',
+            'PASSWORD':'shipin',
+            'HOST':'localhost',
+            'PORT':'',
+        }
     }
-}
+else: # Running on Heroku
+    # Parse database configuration from $DATABASE_URL
+    import dj_database_url
+    DATABASES = {'default':dj_database_url.config()}
+    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Internationalization
@@ -107,5 +116,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if DEBUG==False: # Running on Heroku
+    STATIC_ROOT = 'staticfiles'
 
 LOGIN_URL = '/user/userLogin/'
