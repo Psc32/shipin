@@ -1,0 +1,13 @@
+<!doctype html>
+{% load staticfiles %}
+<html>
+<head>
+<title>视频导航</title>
+<meta charset=utf-8>
+<link rel=stylesheet href={% static 'main/css/main.css' %}>
+</head>
+<body>
+<h1>视频导航 -- {% block heading %}{% endblock %}</h1>
+{% block content %} {% endblock %}
+</body>
+</html>

@@ -1,0 +1,18 @@
+{% extends "main/base.html" %}
+{% block heading %}首頁{% endblock %}
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <p {% if message.tags %} class={{message.tags}} {% endif %}>{{message}}</p>
+  {% endfor %}
+{% endif %}
+<h1>Django 說--Hello world!</h1>
+<p>{{message}}</p>
+<p><a href={% url 'wiki:wiki' %}>前往 Wiki 網頁</a></p>
+{% if user.is_authenticated %}
+<p><a href={% url 'user:userLogout' %}>登出({{user.username}})</a></p>
+{% else %}
+<a href={% url 'user:register' %}>註冊</a></p>
+<p><a href={% url 'user:userLogin' %}>登入</a></p>
+{% endif %}
+{% endblock %}
